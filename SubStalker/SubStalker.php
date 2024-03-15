@@ -3,16 +3,18 @@
 namespace SubStalker;
 
 use Generator\Skeleton\skeleton\base\src\VK\CallbackApi\VKCallbackApiLongPollExecutor;
-use SubStalker\VK\VKClient;
 use VK\Client\VKApiClient;
+
+use SubStalker\VK\VKClient;
 
 class SubStalker {
   private CallbacksHandler $handler;
   private VKCallbackApiLongPollExecutor $executor;
 
   public function __construct(int $group_id, string $access_token) {
-    $client = new VKApiClient('5.131');
-    $this->handler = new CallbacksHandler();
+    $client = new VKApiClient('5.199');
+
+    $this->handler = new CallbacksHandler(new VKClient($client));
     $this->executor = new VKCallbackApiLongPollExecutor(
       $client,
       $access_token,
@@ -21,8 +23,9 @@ class SubStalker {
     );
   }
 
-  public function listen() {
+  public function listen(): void {
     $ts = time();
+
     while (true) {
       try {
         $ts = $this->executor->listen($ts);

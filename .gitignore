@@ -1,1 +1,5 @@
 .idea
+bin
+vendor/
+.env
+composer.lock
